@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Customer Dashboard</title>
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --background: #f3f4f6;
+      --text-dark: #111827;
+      --text-light: #6b7280;
+      --panel-bg: #ffffff;
+      --panel-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      --border-radius: 12px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      background-color: var(--background);
+      color: var(--text-dark);
+    }
+
+    .container {
+      display: flex;
+    }
+
+    .main-content {
+      flex: 1;
+      padding: 2rem;
+      margin-left: 300px;
+    }
+
+    .sidebar {
+      width: 300px;
+      height: 100vh;
+      background: var(--primary);
+      color: white;
+      padding: 2rem;
+      position: fixed;
+      left: 0;
+      top: 0;
+      box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .sidebar h3 {
+      margin-bottom: 1.5rem;
+    }
+
+    .sidebar-nav {
+      list-style: none;
+    }
+
+    .sidebar-nav li {
+      margin-bottom: 1rem;
+    }
+
+    .sidebar-nav a {
+      color: white;
+      text-decoration: none;
+      display: block;
+      padding: 0.75rem 1rem;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: var(--border-radius);
+      transition: all 0.3s ease;
+    }
+
+    .sidebar-nav a:hover,
+    .sidebar-nav a.active {
+      background-color: white;
+      color: var(--primary);
+    }
+
+    .content-panel {
+      display: none;
+      background-color: var(--panel-bg);
+      padding: 2rem;
+      margin-top: 2rem;
+      border-radius: var(--border-radius);
+      box-shadow: var(--panel-shadow);
+    }
+
+    .content-panel.active {
+      display: block;
+    }
+
+    h3 {
+      margin-bottom: 1rem;
+      color: var(--primary);
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.25rem;
+      font-weight: 600;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: var(--border-radius);
+      margin-bottom: 1rem;
+      background-color: #f9fafb;
+    }
+
+    button {
+      background-color: var(--primary);
+      color: white;
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #4338ca;
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    .table th,
+    .table td {
+      padding: 0.75rem;
+      border-bottom: 1px solid #e5e7eb;
+      text-align: left;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.4em 0.8em;
+      border-radius: 999px;
+      font-size: 0.75rem;
+    }
+
+    .bg-success {
+      background-color: #10b981;
+      color: white;
+    }
+    
+    #profile input[disabled] {
+  background-color: #e5e7eb;
+  cursor: not-allowed;
+  color: #6b7280;
+}
+
+.button-group {
+  margin-top: 1.5rem;
+}
+
+.button-group button {
+  margin-right: 1rem;
+}
+
+    .seat-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 40px);
+      gap: 10px;
+      margin-top: 1rem;
+    }
+
+    .seat {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .available {
+      background-color: #d1fae5;
+    }
+
+    .reserved {
+      background-color: #e5e7eb;
+      cursor: not-allowed;
+    }
+
+    .selected {
+      background-color: #facc15;
+    }
+
+    .form-check {
+      margin-bottom: 1rem;
+    }
+
+    .form-check label {
+      margin-left: 0.5rem;
+      font-weight: normal;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 10;
+    }
+
+    .modal-content {
+      background-color: white;
+      margin: 10% auto;
+      padding: 2rem;
+      border-radius: var(--border-radius);
+      max-width: 700px;
+    }
+
+    .modal-header,
+    .modal-body,
+    .modal-footer {
+      margin-bottom: 1rem;
+    }
+
+    .btn-close {
+      float: right;
+      background: none;
+      border: none;
+      font-size: 1.25rem;
+    }
+
+    .mb-3 {
+      margin-bottom: 1rem;
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .col-md-6 {
+      flex: 1 1 48%;
+    }
+
+    .col-12 {
+      flex: 1 1 100%;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="main-content">
+    <h2>Welcome to Your Dashboard</h2>
+    <p>Select an option from the right-side menu to continue.</p>
+
+    <div id="profile" class="content-panel active">
+  <h3>Profile</h3>
+
+  <form id="profileForm">
+    <div class="row">
+      <div class="col-md-6">
+        <label for="name">Name</label>
+        <input type="text" id="name" value="John Doe" abled />
+      </div>
+
+      <div class="col-md-6">
+        <label for="email">Email</label>
+        <input type="email" id="email" value="john@example.com" abled />
+      </div>
+
+      <div class="col-md-6">
+        <label for="mobile">Mobile</label>
+        <input type="tel" id="mobile" value="+94 77 123 4567" abled />
+      </div>
+
+      <div class="col-md-6">
+        <label for="city">City</label>
+        <input type="text" id="city" value="Colombo" abled />
+      </div>
+
+      <div class="col-md-6">
+        <label for="age">Age</label>
+        <input type="number" id="age" value="30" abled />
+      </div>
+    </div>
+
+    <div class="button-group">
+      <button type="button" id="editBtn">Edit</button>
+      <button type="submit" id="saveBtn" style="display: none;">Save</button>
+    </div>
+  </form>
+</div>
+
+
+    <div id="bus-search" class="content-panel">
+      <h3>Search Bus</h3>
+      <form id="searchForm">
+        <div class="row">
+          <div class="col-md-6">
+            <label for="fromTo">From → To</label>
+            <input type="text" id="fromTo" placeholder="e.g., Colombo → Kandy" required />
+          </div>
+          <div class="col-md-6">
+            <label for="date">Date</label>
+            <input type="date" id="date" required />
+          </div>
+          <div class="col-md-6">
+            <label for="busType">Bus Type</label>
+            <select id="busType">
+              <option value="">All</option>
+              <option value="AC">AC</option>
+              <option value="Non-AC">Non-AC</option>
+              <option value="Sleeper">Sleeper</option>
+              <option value="Semi-sleeper">Semi-sleeper</option>
+            </select>
+          </div>
+          <div class="col-12">
+            <button type="submit">Search Buses</button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div id="cancel-reservation" class="content-panel">
+      <h3>Cancel Reservation</h3>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Reservation ID</th>
+            <th>Bus Route</th>
+            <th>Date & Time</th>
+            <th>Seat(s)</th>
+            <th>Fare Paid</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>RES-12345</td>
+            <td>Colombo → Kandy</td>
+            <td>08:00 AM | 2 June</td>
+            <td>A1</td>
+            <td>LKR 500</td>
+            <td><button style="background-color: #ef4444;">Cancel</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="request-seat" class="content-panel">
+      <h3>Request New Seat</h3>
+      <form>
+        <div class="col-md-6">
+            <label for="fromTo2">From → To</label>
+            <input type="text" id="fromTo2" placeholder="e.g., Colombo → Kandy" required />
+          </div>
+<div class="col-md-6">
+            <label for="busType2">Bus Type</label>
+            <select id="busType2" required>
+              <option>AC</option>
+              <option>Non-AC</option>
+              <option>Sleeper</option>
+              <option>Semi-sleeper</option>
+            </select>
+          </div>
+<div class="col-md-6">
+            <label for="status">Status</label>
+            <select id="status" required>
+              <option>Active</option>
+              <option>Maintenance</option>
+              <option>Retired</option>
+            </select>
+          </div>
+
+<div class="col-md-6">
+            <label for="seat">Seat</label>
+            <input type="text" id="seat" placeholder= "A1" required />
+          </div>
+<div class="col-md-6">
+            <label for="travelDate">Travel date</label>
+            <input type="text" id="travelDate" placeholder= "2 June, 08:00 AM" required />
+          </div>
+        <button>Submit Request</button>
+      </form>
+    </div>
+
+    <div id="view-reservations" class="content-panel">
+      <h3>My Reservations</h3>
+      <input type="text" placeholder="Search by date or bus" />
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Reservation ID</th>
+            <th>Bus Name & Type</th>
+            <th>Date & Time</th>
+            <th>From - To</th>
+            <th>Seat Numbers</th>
+            <th>Status</th>
+            <th>Fare</th>
+            <th>Booking Date</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>RES-12345</td>
+            <td>Bus 101 (AC)</td>
+            <td>08:00 AM | 2 June</td>
+            <td>Colombo → Kandy</td>
+            <td>A1</td>
+            <td><span class="badge bg-success">Confirmed</span></td>
+            <td>LKR 500</td>
+            <td>1 June</td>
+            <td><button style="background-color: #ef4444;">Cancel</button></td>
+            <td><button style="background-color: #278800;">Change seat</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h3>Menu</h3>
+    <ul class="sidebar-nav">
+      <li><a href="#" onclick="showPanel('profile')">Profile</a></li>
+      <li><a href="#" onclick="showPanel('bus-search')">Bus Search</a></li>
+      <li><a href="#" onclick="showPanel('cancel-reservation')">Cancel Reservation</a></li>
+      <li><a href="#" onclick="showPanel('request-seat')">Request New Seat</a></li>
+      <li><a href="#" onclick="showPanel('view-reservations')">View My Reservations</a></li>
+      <li><a href="#" onclick="logout()">Logout</a></li>
+    </ul>
+  </div>
+</div>
+
+<script>
+  function showPanel(id) {
+    document.querySelectorAll('.content-panel').forEach(panel => {
+      panel.classList.remove('active');
+    });
+    document.getElementById(id).classList.add('active');
+
+    document.querySelectorAll('.sidebar-nav a').forEach(link => {
+      link.classList.remove('active');
+    });
+    event.target.classList.add('active');
+  }
+
+  function logout() {
+    alert("Logged out successfully!");
+  }
+
+  document.getElementById('editBtn').addEventListener('click', function () {
+  const fields = document.querySelectorAll('#profileForm input');
+  fields.forEach(field => field.removeAttribute('disabled'));
+  document.getElementById('editBtn').style.display = 'none';
+  document.getElementById('saveBtn').style.display = 'inline-block';
+});
+
+document.getElementById('profileForm').addEventListener('submit', function (e) {
+  e.preventDefault();
+  const fields = document.querySelectorAll('#profileForm input');
+  fields.forEach(field => field.setAttribute('disabled', true));
+  document.getElementById('editBtn').style.display = 'inline-block';
+  document.getElementById('saveBtn').style.display = 'none';
+  alert("Profile updated successfully!");
+});
+
+</script>
+</body>
+</html>

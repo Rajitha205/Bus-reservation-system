@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ticket Reservation System</title>
+  <style>
+    :root {
+      --primary-color: #667eea;
+      --secondary-color: #764ba2;
+      --accent-color: #2d3748;
+      --text-color: #333;
+      --white: #ffffff;
+      --light-bg: #f0f4ff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      padding: 1.5rem 0;
+    }
+
+    .header .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .header h1 {
+      color: white;
+      font-size: 1.75rem;
+      font-weight: 700;
+    }
+
+    .header nav ul {
+      display: flex;
+      gap: 1.5rem;
+      list-style: none;
+    }
+
+    .header nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      transition: background 0.3s;
+    }
+
+    .header nav a:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+    }
+
+    /* Hero Section with Image */
+    .hero {
+      background: url('bus.jpg')  no-repeat center center/cover;
+      padding: 5rem 0;
+      color: white;
+      position: relative;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 24, 129, 0.178); /* Overlay */
+    }
+
+    .hero .content {
+      position: relative;
+      z-index: 1;
+      max-width: 700px;
+    }
+
+    .hero h2 {
+      font-size: 3rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.2;
+    }
+
+    .hero ul {
+      list-style: none;
+      padding-left: 0;
+      margin-bottom: 2rem;
+    }
+
+    .hero li {
+      position: relative;
+      padding-left: 2rem;
+      margin: 0.75rem 0;
+    }
+
+    .hero li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      font-size: 1.25rem;
+      color: white;
+    }
+
+    .cta-btn {
+      background: var(--accent-color);
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s;
+      border: none; /* Added to remove default button border */
+    }
+
+    .cta-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    /* Quick Search */
+    .quick-search {
+      padding: 3rem 0;
+      background: var(--light-bg);
+      text-align: center;
+    }
+
+    .search-form {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+
+    .search-form input {
+      padding: 1rem;
+      min-width: 250px;
+      flex: 1;
+      max-width: 300px;
+      border: 2px solid var(--primary-color);
+      border-radius: 6px;
+      font-size: 0.9rem;
+    }
+
+    .btn-success {
+      background-color: var(--accent-color);
+      border: none;
+      font-weight: 600;
+      padding: 12px 24px;
+      font-size: 1.1rem;
+      border-radius: 50px;
+      transition: all 0.3s ease;
+      color: white; /* Added for button text color */
+      cursor: pointer; /* Added for pointer cursor */
+    }
+
+    .btn-success:hover {
+      background-color: var(--primary-color);
+      transform: translateY(-2px);
+    }
+
+    /* Popular Routes */
+    .popular-routes {
+      padding: 3rem 1rem;
+      background: var(--light-bg);
+      text-align: center;
+    }
+
+    .route-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .route-card {
+      background: white;
+      border: 2px solid var(--primary-color);
+      padding: 1.5rem;
+      text-align: center;
+      border-radius: 8px; /* Added for rounded corners */
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* Added for subtle shadow */
+    }
+
+    .route-card h4 {
+      color: var(--primary-color);
+      margin-bottom: 1rem;
+      font-size: 1.25rem;
+    }
+
+    /* Login/Registration */
+    .login-register {
+      background: linear-gradient(135deg, #4a00ff, #764ba2);
+      padding: 3rem 0;
+      color: white;
+      text-align: center;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 2rem;
+      margin-top: 2rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .purple-btn {
+      background: var(--primary-color);
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none; /* Added to remove default button border */
+      transition: transform 0.2s; /* Added for hover effect */
+    }
+
+    .purple-btn:hover {
+        transform: translateY(-2px);
+    }
+
+    .or-text {
+      margin: 0 1rem;
+      font-weight: 600;
+      align-self: center; /* Align text vertically in flex container */
+    }
+
+    /* Testimonials */
+    .testimonials {
+      padding: 3rem 0;
+      background: var(--light-bg); /* Added light background for contrast */
+    }
+
+    .testimonial-card {
+      background: white;
+      border: 2px solid var(--primary-color);
+      padding: 1.5rem;
+      margin: 1rem 0;
+      border-radius: 8px; /* Added for rounded corners */
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* Added for subtle shadow */
+    }
+
+    .customer-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .stars {
+      color: gold;
+      font-size: 1.2rem;
+    }
+
+    /* Footer */
+    .footer {
+      background: #000000;
+      color: white;
+      padding: 3rem 0;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    .footer .container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+    }
+
+    .footer-section {
+      flex: 1 1 30%;
+      min-width: 250px;
+    }
+
+    .footer-section h4 {
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .footer-section ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .footer-section li {
+      margin-bottom: 0.5rem;
+    }
+
+    .footer-section a {
+      color: white;
+      text-decoration: none;
+      transition: text-decoration 0.3s; /* Added for smooth hover */
+    }
+
+    .footer-section a:hover {
+      text-decoration: underline;
+    }
+
+    .copyright {
+      background: black;
+      padding: 1rem;
+      text-align: center;
+      font-size: 0.875rem;
+      color: white;
+      margin-top: 2rem;
+      border-top: 1px solid white;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .header .container {
+        flex-direction: column;
+        text-align: center;
+      }
+      .header nav ul {
+        flex-direction: column;
+        gap: 0.5rem;
+        margin-top: 1rem;
+      }
+
+      .hero h2 {
+        font-size: 2.2rem;
+      }
+
+      .hero .content {
+        max-width: 90%;
+        margin: 0 auto; /* Center content on smaller screens */
+        text-align: center; /* Center text within hero content */
+      }
+      .hero li {
+        padding-left: 0; /* Remove left padding for smaller screens */
+        text-align: left; /* Keep bullet points left-aligned */
+        margin: 0.5rem auto; /* Center list items for better readability */
+        max-width: fit-content; /* Adjust width to content */
+      }
+      .hero li::before {
+        left: -1rem; /* Adjust bullet point position */
+      }
+
+      .search-form {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .search-form input {
+        width: 100%;
+        max-width: none; /* Remove max-width constraint for full width */
+      }
+
+      .buttons {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .or-text {
+        margin: 0.5rem 0; /* Adjust margin for vertical layout */
+      }
+
+      .footer .container {
+        flex-direction: column;
+        align-items: center; /* Center footer sections */
+        gap: 1.5rem;
+      }
+
+      .footer-section {
+        text-align: center; /* Center text in footer sections */
+      }
+    }
+
+    @media (max-width: 480px) {
+        .hero h2 {
+            font-size: 1.8rem;
+        }
+        .cta-btn, .btn-success, .purple-btn {
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+        }
+        .testimonial-card {
+            padding: 1rem;
+        }
+    }
+  </style>
+</head>
+<body>
+<header class="header">
+  <div class="container">
+    <h1>Ticket Reservation</h1>
+    <nav>
+      <ul>
+        <li><a href="home.html">Home</a></li>
+        <li><a href="contact.html">Contact Us</a></li>
+        <li><a href="About.html">About Us</a></li>
+        <li><a href="Login.html">Login</a></li>
+        <li><a href="Register.html">Register</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container content">
+    <h2>Ride Smart<br>Travel Easy!</h2>
+    <ul>
+      <li>Easy online booking</li>
+      <li>Real-time bus availability</li>
+      <li>Instant notifications via SMS/email</li>
+      <li>Safe and secure seat reservation</li>
+    </ul>
+    <p>Your Next Adventure Starts With Us.</p><br>
+    <button class="cta-btn" onclick="window.location.href='Login.html'">Book Your Seat Now</button>
+  </div>
+</section>
+
+<section class="quick-search">
+  <div class="container">
+    <h3>Quick Bus Search</h3>
+    <form class="search-form">
+      <input type="text" placeholder="From (Starting point)" required>
+      <input type="text" placeholder="To (End point)" required>
+      <input type="date" required>
+      <button type="submit" class="btn btn-success btn-lg" onclick="window.location.href='Login.html'">Search Buses</button>
+    </form>
+  </div>
+</section>
+
+<section class="popular-routes">
+  <div class="container">
+    <h3>Popular Routes</h3>
+    <div class="route-cards">
+      <div class="route-card">
+        <h4>Bus 101</h4>
+        <p>Colombo → Kandy</p>
+        <p>Departure: 08:00 AM</p>
+        <p>Fare: LKR 500</p>
+        <p>Available Seats: 20</p>
+      </div>
+      <div class="route-card">
+        <h4>Bus 102</h4>
+        <p>Colombo → Matara</p>
+        <p>Departure: 08:00 AM</p>
+        <p>Fare: LKR 500</p>
+        <p>Available Seats: 20</p>
+      </div>
+      <div class="route-card">
+        <h4>Bus 103</h4>
+        <p>Colombo → Galle</p>
+        <p>Departure: 08:00 AM</p>
+        <p>Fare: LKR 500</p>
+        <p>Available Seats: 20</p>
+      </div>
+      <div class="route-card">
+        <h4>Bus 104</h4>
+        <p>Galle → Matara</p>
+        <p>Departure: 08:00 AM</p>
+        <p>Fare: LKR 500</p>
+        <p>Available Seats: 20</p>
+      </div>
+      <div class="route-card">
+        <h4>Bus 105</h4>
+        <p>Tangalle → Colombo</p>
+        <p>Departure: 08:00 AM</p>
+        <p>Fare: LKR 500</p>
+        <p>Available Seats: 20</p>
+      </div>
+      <div class="route-card">
+        <h4>Bus 106</h4>
+        <p>Galle → Kandy</p>
+        <p>Departure: 08:00 AM</p>
+        <p>Fare: LKR 500</p>
+        <p>Available Seats: 20</p>
+      </div>
+      <div class="route-card">
+        <h4>Bus 106</h4>
+        <p>Galle → Rathnapura</p>
+        <p>Departure: 08:00 AM</p>
+        <p>Fare: LKR 500</p>
+        <p>Available Seats: 20</p>
+      </div>
+      <div class="route-card">
+        <h4>Bus 106</h4>
+        <p>Katharagama → Colombo</p>
+        <p>Departure: 03:00 AM</p>
+        <p>Fare: LKR 900</p>
+        <p>Available Seats: 20</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="login-register">
+  <div class="container">
+    <h3>Login or Register</h3>
+    <div class="buttons">
+      <button class="purple-btn" onclick="window.location.href='Login.html'">Login</button>
+      <span class="or-text">OR</span>
+      <button class="purple-btn" onclick="window.location.href='Register.html'">Register</button>
+    </div>
+  </div>
+</section>
+
+<section class="testimonials">
+  <div class="container">
+    <h3>What Our Customers Say</h3>
+    <div class="testimonial-card">
+      <div class="customer-info">
+        <span>Priya S</span>
+        <div class="stars">⭐⭐⭐⭐⭐</div>
+      </div>
+      <p>Had an issue with payment, and their live chat support resolved it immediately. The agent was polite and guided me step-by-step. Great service!</p>
+    </div>
+    <div class="testimonial-card">
+      <div class="customer-info">
+        <span>Ramesh K</span>
+        <div class="stars">⭐⭐⭐⭐⭐</div>
+      </div>
+      <p>Booked my ticket in under 5 minutes! The interface is super easy to navigate, and I loved how it showed real-time seat availability. No more waiting in long queues at the counter. Highly recommended!</p>
+    </div>
+    <div class="testimonial-card">
+      <div class="customer-info">
+        <span>Nimal D</span>
+        <div class="stars">⭐⭐⭐⭐⭐</div>
+      </div>
+      <p>Used this system for a family trip. All our seats were confirmed instantly, and the bus was on time. The SMS reminders about the departure time were really helpful. Will use it again!</p>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-section">
+      <h4>Ticket Reservation</h4>
+      <ul>
+        <li><a href="contact.html">Contact Us</a></li>
+      </ul>
+    </div>
+    <div class="footer-section">
+      <h4>About Us</h4>
+      <ul>
+        <li><a href="#">Our Story</a></li>
+        <li><a href="#">Careers</a></li>
+      </ul>
+    </div>
+    <div class="footer-section">
+      <h4>Legal</h4>
+      <ul>
+        <li><a href="#">Terms & Conditions</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="copyright">
+    <p>© 2025 Bus Reservation System. All rights reserved.</p>
+  </div>
+</footer>
+</body>
+</html>

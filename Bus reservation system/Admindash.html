@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard</title>
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --background: #f3f4f6;
+      --text-dark: #111827;
+      --panel-bg: #ffffff;
+      --panel-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      --border-radius: 12px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      background-color: var(--background);
+      color: var(--text-dark);
+    }
+
+    .container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .main-content {
+      flex: 1;
+      padding: 2rem;
+      margin-left: 300px;
+      overflow-y: auto;
+    }
+
+    .sidebar {
+      width: 300px;
+      height: 100vh;
+      background: var(--primary);
+      color: white;
+      padding: 2rem;
+      position: fixed;
+      left: 0;
+      top: 0;
+      box-shadow: -4px 0 10px rgba(0, 0, 0, 0.1);
+      overflow-y: auto;
+    }
+
+    .sidebar h3 {
+      margin-bottom: 1.5rem;
+    }
+
+    .sidebar-nav {
+      list-style: none;
+    }
+
+    .sidebar-nav li {
+      margin-bottom: 1rem;
+    }
+
+    .sidebar-nav a {
+      color: white;
+      text-decoration: none;
+      display: block;
+      padding: 0.75rem 1rem;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: var(--border-radius);
+      transition: all 0.3s ease;
+    }
+
+    .sidebar-nav a:hover,
+    .sidebar-nav a.active {
+      background-color: white;
+      color: var(--primary);
+    }
+
+    .content-panel {
+      display: none;
+      background-color: var(--panel-bg);
+      padding: 2rem;
+      margin-top: 2rem;
+      border-radius: var(--border-radius);
+      box-shadow: var(--panel-shadow);
+    }
+
+    .content-panel.active {
+      display: block;
+    }
+
+    h3 {
+      margin-bottom: 1rem;
+      color: var(--primary);
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.25rem;
+      font-weight: 600;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: var(--border-radius);
+      margin-bottom: 1rem;
+      background-color: #f9fafb;
+    }
+
+    button {
+      background-color: var(--primary);
+      color: white;
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #4338ca;
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    .table th, .table td {
+      padding: 0.75rem;
+      border-bottom: 1px solid #e5e7eb;
+      text-align: left;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.4em 0.8em;
+      border-radius: 999px;
+      font-size: 0.75rem;
+    }
+
+    .bg-success {
+      background-color: #10b981;
+      color: white;
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .col-md-6 {
+      flex: 1 1 48%;
+    }
+
+    .col-12 {
+      flex: 1 1 100%;
+    }
+
+    .report-section {
+      margin-bottom: 2rem;
+    }
+
+    .report-actions {
+      margin-top: 1rem;
+      display: flex;
+      gap: 1rem;
+    }
+
+    .report-actions button {
+      background-color: #10b981;
+    }
+
+    .report-actions button:hover {
+      background-color: #059669;
+    }
+
+    /* Logout Modal */
+    .logout-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logout-modal-content {
+      background: white;
+      padding: 2rem;
+      border-radius: var(--border-radius);
+      text-align: center;
+      max-width: 400px;
+    }
+
+    .logout-modal-content button {
+      margin: 1rem 0.5rem;
+      padding: 0.6rem 1.2rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="main-content">
+    <h2>Welcome, Admin!</h2>
+    <p>Select an option from the right-side menu to manage the system.</p>
+
+    <!-- Admin Profile -->
+    <div id="adminProfile" class="content-panel active">
+      <h3>Admin Profile</h3>
+      <div class="row">
+        <div class="col-md-6">
+          <label>Admin Name</label>
+          <input type="text" value="Admin User" abled />
+        </div>
+        <div class="col-md-6">
+          <label>Email Address</label>
+          <input type="email" value="admin@example.com" abled />
+        </div>
+        <div class="col-md-6">
+          <label>Phone Number</label>
+          <input type="tel" value="+94 77 123 4567" abled />
+        </div>
+        <div class="col-md-6">
+          <label>City</label>
+          <input type="text" value="Matara" abled />
+        </div>
+        <div class="col-md-6">
+          <label>Age</label>
+          <input type="text" value="Age" abled />
+        </div>
+        <div class="col-md-6">
+          <label>Password</label>
+          <input type="text" value="password" abled />
+        </div>
+      </div><br>
+      <div class="button-group">
+        <button type="button" onclick="editProfile()">Edit Profile</button>
+        <button type="button" onclick="changePassword()">Change Password</button>
+      </div>
+    </div>
+
+    <!-- Bus Registration -->
+    <div id="busRegistration" class="content-panel">
+      <h3>Bus Registration</h3>
+      <form id="busForm" class="mb-3">
+        <div class="row">
+          <div class="col-md-6">
+            <label>Bus Number</label>
+            <input type="text" placeholder="e.g., BUS-101" required />
+          </div>
+          <div class="col-md-6">
+            <label>Operator Name</label>
+            <input type="text" placeholder="e.g., Green Lanka Travels" required />
+          </div>
+          <div class="col-md-6">
+            <label>From → To</label>
+            <input type="text" placeholder="e.g., Colombo → Kandy" required />
+          </div>
+          <div class="col-md-6">
+            <label>Departure Time</label>
+            <input type="time" required />
+          </div>
+          <div class="col-md-6">
+            <label>Arrival Time</label>
+            <input type="time" required />
+          </div>
+          <div class="col-md-6">
+            <label>Seat Capacity</label>
+            <input type="number" placeholder="e.g., 40" required />
+          </div>
+          <div class="col-md-6">
+            <label>Bus Type</label>
+            <select required>
+              <option>AC</option>
+              <option>Non-AC</option>
+              <option>Sleeper</option>
+              <option>Semi-sleeper</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label>Driver Info</label>
+            <input type="text" placeholder="Driver Name & License No." required />
+          </div>
+          <div class="col-md-6">
+            <label>Status</label>
+             <select required>
+               <option>Active</option>
+               <option>Maintenance</option>
+               <option>Retired</option>
+             </select>
+          </div>
+          <div class="col-12">
+            <button type="submit">Add New Bus</button>
+          </div>
+        </div>
+      </form>
+      <h4>Bus List</h4>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Bus Number</th>
+            <th>Operator</th>
+            <th>Route</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>BUS-101</td>
+            <td>Green Lanka Travels</td>
+            <td>Colombo → Kandy</td>
+            <td><span class="badge bg-success">Active</span></td>
+            <td>
+              <button>Edit</button>
+              <button style="background-color: #ef4444;">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- View All Reservations -->
+    <div id="viewReservations" class="content-panel">
+      <h3>View All Reservations</h3>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Reservation ID</th>
+            <th>Customer</th>
+            <th>Bus Info</th>
+            <th>Route</th>
+            <th>Seats</th>
+            <th>Travel Date</th>
+            <th>Payment</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>RES-12345</td>
+            <td>John Doe</td>
+            <td>BUS-101 (AC)</td>
+            <td>Colombo → Kandy</td>
+            <td>A1</td>
+            <td>2 June, 08:00 AM</td>
+            <td><span class="badge bg-success">Paid</span></td>
+            <td><span class="badge bg-success">Confirmed</span></td>
+            <td>
+              <button style="background-color: #ef4444;">Cancel</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Customer List -->
+    <div id="customerList" class="content-panel">
+      <h3>Customer List</h3>
+      <input type="text" placeholder="Search by name or email" class="mb-3" />
+      <div class="button-group">
+        <button onclick="sortCustomersByAge('asc')">Sort Age ↑</button>
+        <button onclick="sortCustomersByAge('desc')">Sort Age ↓</button>
+      </div>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Age</th>
+            <th>Registered</th>
+            <th>Reservations</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>CUST-001</td>
+            <td>John Doe</td>
+            <td>john@example.com</td>
+            <td>+94 77 123 4567</td>
+            <td>30</td>
+            <td>1 June 2025</td>
+            <td>2</td>
+            <td>
+              <button>View</button>
+              <button>Contact</button>
+              <button style="background-color: #ef4444;">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Shortest Route Planner -->
+    <div id="routePlanner" class="content-panel">
+      <h3>Shortest Route Planner</h3>
+      <form class="mb-3">
+        <div class="row">
+          <div class="col-md-6">
+            <label>Start Location</label>
+            <input type="text" placeholder="Enter starting point" required />
+          </div>
+          <div class="col-md-6">
+            <label>Destination</label>
+            <input type="text" placeholder="Enter destination" required />
+          </div>
+          <div class="col-12">
+            <button type="submit">Find Route</button>
+          </div>
+        </div>
+      </form>
+      <h4>Suggested Routes</h4>
+      <ul>
+        <li>Colombo → Kandy | Distance: 120 km | Time: 3h 30m</li>
+        <li>Galle → Matara | Distance: 60 km | Time: 1h 30m</li>
+      </ul>
+      <button>Save Route</button>
+    </div>
+
+    <!-- Reports Panel -->
+    <div id="reports" class="content-panel">
+      <h3>Reports</h3>
+      <div class="report-section">
+        <h4>Bus List Report</h4>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Bus Number</th>
+              <th>Operator</th>
+              <th>Route</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>BUS-101</td>
+              <td>Green Lanka Travels</td>
+              <td>Colombo → Kandy</td>
+              <td><span class="badge bg-success">Active</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="report-actions">
+          <button onclick="downloadPDF('bus')">Download PDF</button>
+        </div>
+      </div>
+      <div class="report-section">
+        <h4>Reservations Report</h4>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Reservation ID</th>
+              <th>Customer</th>
+              <th>Bus Info</th>
+              <th>Route</th>
+              <th>Seats</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>RES-12345</td>
+              <td>John Doe</td>
+              <td>BUS-101 (AC)</td>
+              <td>Colombo → Kandy</td>
+              <td>A1</td>
+              <td><span class="badge bg-success">Confirmed</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="report-actions">
+          <button onclick="downloadPDF('reservations')">Download PDF</button>
+        </div>
+      </div>
+      <div class="report-section">
+        <h4>Customer List Report</h4>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Age</th>
+              <th>Registered</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>CUST-001</td>
+              <td>John Doe</td>
+              <td>john@example.com</td>
+              <td>+94 77 123 4567</td>
+              <td>30</td>
+              <td>1 June 2025</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="report-actions">
+          <button onclick="downloadPDF('customers')">Download PDF</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sidebar Menu -->
+  <div class="sidebar">
+    <h3>Admin Menu</h3>
+    <ul class="sidebar-nav">
+      <li><a href="#" onclick="showPanel('adminProfile')">👤 Admin Profile</a></li>
+      <li><a href="#" onclick="showPanel('busRegistration')">🚌 Bus Registration</a></li>
+      <li><a href="#" onclick="showPanel('viewReservations')">📄 View All Reservations</a></li>
+      <li><a href="#" onclick="showPanel('customerList')">👥 Customer List</a></li>
+      <li><a href="#" onclick="showPanel('routePlanner')">🗺️ Route Planner</a></li>
+      <li><a href="#" onclick="showPanel('reports')">📊 Reports</a></li>
+      <li><a href="#" onclick="confirmLogout()">🚪 Logout</a></li>
+    </ul>
+  </div>
+</div>
+
+<!-- Logout Modal -->
+<div class="logout-modal" id="logoutModal">
+  <div class="logout-modal-content">
+    <h5>Confirm Logout</h5>
+    <p>Are you sure you want to log out?</p>
+    <button onclick="logout()">Yes</button>
+    <button onclick="hideLogoutModal()">No</button>
+  </div>
+</div>
+
+<script>
+  function showPanel(id) {
+    document.querySelectorAll('.content-panel').forEach(panel => panel.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.querySelectorAll('.sidebar-nav a').forEach(link => link.classList.remove('active'));
+    event.target.classList.add('active');
+  }
+
+  function confirmLogout() {
+    document.getElementById('logoutModal').style.display = 'flex';
+  }
+
+  function hideLogoutModal() {
+    document.getElementById('logoutModal').style.display = 'none';
+  }
+
+  function logout() {
+    alert("Logged out successfully!");
+    window.location.href = "login.html";
+  }
+
+  function editProfile() {
+    alert("Edit profile functionality (add form here)");
+  }
+
+  function changePassword() {
+    alert("Change password functionality (add form here)");
+  }
+
+  function sortCustomersByAge(direction) {
+    alert("Sorting customers by age: " + direction);
+  }
+
+  function downloadPDF(reportType) {
+    alert(`Downloading ${reportType} report as PDF`);
+  }
+
+  // Initialize active panel
+  document.addEventListener('DOMContentLoaded', () => {
+    showPanel('adminProfile');
+  });
+</script>
+</body>
+</html>
